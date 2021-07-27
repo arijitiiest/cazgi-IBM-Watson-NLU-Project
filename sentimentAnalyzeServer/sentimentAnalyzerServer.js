@@ -32,20 +32,95 @@ app.get("/",(req,res)=>{
   });
 
 app.get("/url/emotion", (req,res) => {
+    const url = req.query.url;
+    const NLUInstance = getNLUInstance();
 
-    return res.send({"happy":"90","sad":"10"});
+    const analyzeParams = {
+        'url': url,
+        'features': {
+            'emotion': {
+            }
+        }
+    }
+
+    NLUInstance.analyze(analyzeParams)
+    .then(analyzeResults => {
+        // console.log(analyzeResults)
+        return res.send(analyzeResults.result.emotion.document.emotion)
+    })
+    .catch(err => {
+        console.log('error:', err);
+        return res.send({error: err})
+    });
 });
 
 app.get("/url/sentiment", (req,res) => {
-    return res.send("url sentiment for "+req.query.url);
+    const url = req.query.url;
+    const NLUInstance = getNLUInstance();
+
+    const analyzeParams = {
+        'url': url,
+        'features': {
+            'sentiment': {
+            }
+        }
+    }
+
+    NLUInstance.analyze(analyzeParams)
+    .then(analyzeResults => {
+        // console.log(analyzeResults.result)
+        return res.send(analyzeResults.result.sentiment.document.label)
+    })
+    .catch(err => {
+        console.log('error:', err);
+        return res.send({error: err})
+    });
 });
 
 app.get("/text/emotion", (req,res) => {
-    return res.send({"happy":"10","sad":"90"});
+    const text = req.query.text;
+    const NLUInstance = getNLUInstance();
+
+    const analyzeParams = {
+        'html': text,
+        'features': {
+            'emotion': {
+            }
+        }
+    }
+
+    NLUInstance.analyze(analyzeParams)
+    .then(analyzeResults => {
+        // console.log(analyzeResults)
+        return res.send(analyzeResults.result.emotion.document.emotion)
+    })
+    .catch(err => {
+        console.log('error:', err);
+        return res.send({error: err})
+    });
 });
 
 app.get("/text/sentiment", (req,res) => {
-    return res.send("text sentiment for "+req.query.text);
+    const text = req.query.text;
+    const NLUInstance = getNLUInstance();
+
+    const analyzeParams = {
+        'html': text,
+        'features': {
+            'sentiment': {
+            }
+        }
+    }
+
+    NLUInstance.analyze(analyzeParams)
+    .then(analyzeResults => {
+        // console.log(analyzeResults.result)
+        return res.send(analyzeResults.result.sentiment.document.label)
+    })
+    .catch(err => {
+        console.log('error:', err);
+        return res.send({error: err})
+    });
 });
 
 let server = app.listen(8080, () => {
